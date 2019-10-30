@@ -1,17 +1,11 @@
+use std::convert::TryInto;
 use std::fs::File;
 use std::io::{Read, Write};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut file = File::create("/Users/kuy/Work/au2far-ocr/started.txt")?;
-    write!(file, "STARTED")?;
-    file.flush()?;
-
     let handle = std::io::stdin().take(4);
-    let mut size = 0;
-    for (i, val) in handle.bytes().enumerate() {
-        let val = val.unwrap();
-        size += 256u32.pow(i as u32) * val as u32
-    }
+    let bytes: Vec<u8> = handle.bytes().map(|i| i.unwrap()).collect();
+    let size = u32::from_le_bytes(bytes.as_slice().try_into().unwrap());
 
     let mut file = File::create("/Users/kuy/Work/au2far-ocr/size.txt")?;
     write!(file, "SIZE: {}", size)?;
