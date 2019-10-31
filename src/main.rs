@@ -1,3 +1,5 @@
+mod imageutil;
+
 use base64::decode;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
@@ -37,10 +39,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         )?;
         file.flush()?;
 
-        let bin = decode(&message.payload)?;
-        let mut png = File::create("/Users/kuy/Work/au2far-ocr/capture.png")?;
-        png.write_all(&bin)?;
-        png.flush()?;
+        let png = decode(&message.payload)?;
+        let mut file = File::create("/Users/kuy/Work/au2far-ocr/capture.png")?;
+        file.write_all(&png)?;
+        file.flush()?;
+
+        // Normalize image
+        imageutil::normalize(&png);
 
         // Send response
         let res = "{\"payload\":\"123456\"}";
