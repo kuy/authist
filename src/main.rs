@@ -1,3 +1,4 @@
+use base64::decode;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 use std::error::Error;
@@ -35,6 +36,11 @@ fn main() -> Result<(), Box<dyn Error>> {
             size, len, message.payload
         )?;
         file.flush()?;
+
+        let bin = decode(&message.payload)?;
+        let mut png = File::create("/Users/kuy/Work/au2far-ocr/capture.png")?;
+        png.write_all(&bin)?;
+        png.flush()?;
 
         // Send response
         let res = "{\"payload\":\"123456\"}";
