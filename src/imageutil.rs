@@ -5,6 +5,7 @@ use imageproc::edges::canny;
 use imageproc::geometric_transformations::{rotate_about_center, Interpolation};
 use imageproc::hough::{detect_lines, draw_polar_lines, LineDetectionOptions, PolarLine};
 use imageproc::map::map_colors;
+use imageproc::stats::percentile;
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
@@ -17,7 +18,14 @@ pub fn normalize(png: &Vec<u8>) {
     let output_dir = Path::new("/Users/kuy/Work/au2far-ocr/process");
     let gray_path = output_dir.join("gray.png");
     let gray_image = orig_image.resize(256, 256, FilterType::Triangle).to_luma();
-    orig_image.save(&gray_path).unwrap();
+    gray_image.save(&gray_path).unwrap();
+
+    // Calc percentile
+    let pth_intensity = percentile(&gray_image, 50);
+
+    let log_path = output_dir.join("process.log");
+    let mut log = File::create(log_path).expect("Failed to create log file");
+    write!(log, "percentile={}\n", pth_intensity).expect("Failed to write log file");
 
     // Detect edges using Canny algorithm
     let edges = canny(&gray_image, 50.0, 100.0);
@@ -43,8 +51,6 @@ pub fn normalize(png: &Vec<u8>) {
     let lines_path = output_dir.join("lines.png");
     lines_image.save(&lines_path).unwrap();
 
-    let log_path = output_dir.join("process.log");
-    let mut log = File::create(log_path).expect("Failed to create log file");
     write!(log, "lines={:?}\n", lines).expect("Failed to write log file");
 
     // Calculate angle of rotation
@@ -73,12 +79,13 @@ pub fn normalize(png: &Vec<u8>) {
     rotated_image.save(&rotated_path).unwrap();
 
     // Binarize image
-    let mut bnw_image = threshold(&rotated_image, 128);
+    let mut bnw_image = threshold(&rotated_image, 160);
+    if pth_intensity < 128 {
+        invert(&mut bnw_image);
+        write!(log, "inverted=true\n").expect("Failed to write log file");
+    } else {
+        write!(log, "inverted=false\n").expect("Failed to write log file");
+    }
     let bnw_path = output_dir.join("bnw.png");
     bnw_image.save(&bnw_path).unwrap();
-
-    // Invert image
-    invert(&mut bnw_image);
-    let inv_path = output_dir.join("inv.png");
-    bnw_image.save(&inv_path).unwrap();
 }

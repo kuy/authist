@@ -1,6 +1,8 @@
 mod imageutil;
+mod ocr;
 
 use base64::decode;
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::convert::TryInto;
 use std::error::Error;
@@ -32,23 +34,40 @@ fn main() -> Result<(), Box<dyn Error>> {
         let message: Message = serde_json::from_str(&buf)?;
 
         let mut file = File::create("/Users/kuy/Work/au2far-ocr/output.txt")?;
-        write!(
-            file,
-            "size={}\nread={}\ndata={}",
-            size, len, message.payload
-        )?;
+        write!(file, "size={}\nread={}", size, len)?;
         file.flush()?;
 
         let png = decode(&message.payload)?;
-        let mut file = File::create("/Users/kuy/Work/au2far-ocr/capture.png")?;
-        file.write_all(&png)?;
-        file.flush()?;
 
         // Normalize image
         imageutil::normalize(&png);
 
+        // Scan code
+        let code = ocr::scan().expect("Failed to recognize code");
+
+        let mut file = File::create("/Users/kuy/Work/au2far-ocr/ocr.txt")?;
+        write!(file, "raw={}\n", code)?;
+        file.flush()?;
+
+        // Sanitize result
+        let re = Regex::new(r"[\d\s]{6,}").unwrap();
+        let res = match re.find(&code) {
+            Some(code) => {
+                let raw = String::from(code.as_str());
+                let re = Regex::new(r"[^\d]").unwrap();
+                let code = String::from(re.replace_all(&raw, ""));
+                serde_json::to_string(&Message { payload: code }).unwrap()
+            }
+            None => serde_json::to_string(&ErrorResponse {
+                error: "scan".into(),
+            })
+            .unwrap(),
+        };
+
+        write!(file, "code={}\n", res)?;
+        file.flush()?;
+
         // Send response
-        let res = "{\"payload\":\"123456\"}";
         io::stdout().write_all(&u32::to_le_bytes(res.len() as u32))?;
         write!(io::stdout(), "{}", res)?;
         io::stdout().flush()?;
