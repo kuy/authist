@@ -10,7 +10,7 @@ use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 
-pub fn normalize(png: &Vec<u8>) {
+pub fn normalize(png: &Vec<u8>) -> image::GrayImage {
     // Load and resize image, then convert to grayscale
     let orig_image = load(png, ImageFormat::PNG).expect("Failed to load image");
 
@@ -88,4 +88,5 @@ pub fn normalize(png: &Vec<u8>) {
     }
     let bnw_path = output_dir.join("bnw.png");
     bnw_image.save(&bnw_path).unwrap();
+    bnw_image
 }

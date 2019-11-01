@@ -35,19 +35,17 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         let mut file = File::create("/Users/kuy/Work/au2far-ocr/output.txt")?;
         write!(file, "size={}\nread={}", size, len)?;
-        file.flush()?;
 
         let png = decode(&message.payload)?;
 
         // Normalize image
-        imageutil::normalize(&png);
+        let img = imageutil::normalize(&png);
 
         // Scan code
-        let code = ocr::scan().expect("Failed to recognize code");
+        let code = ocr::scan(img).expect("Failed to recognize code");
 
         let mut file = File::create("/Users/kuy/Work/au2far-ocr/ocr.txt")?;
         write!(file, "raw={}\n", code)?;
-        file.flush()?;
 
         // Sanitize result
         let re = Regex::new(r"[\d\s]{6,}").unwrap();
@@ -65,7 +63,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         };
 
         write!(file, "code={}\n", res)?;
-        file.flush()?;
 
         // Send response
         io::stdout().write_all(&u32::to_le_bytes(res.len() as u32))?;
