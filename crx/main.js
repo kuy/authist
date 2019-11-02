@@ -1,11 +1,15 @@
-const config = { attributes: false, childList: true, subtree: true };
-const observer = new MutationObserver((list, observer) => {
-  if (document.getElementById("mfacode") || document.getElementById("main-q")) {
-    setupCaptureFrame();
-    observer.disconnect();
-  }
-});
-observer.observe(document.body, config);
+if (document.getElementById("input_account")) {
+  const config = { attributes: false, childList: true, subtree: true };
+  const observer = new MutationObserver((list, observer) => {
+    if (document.getElementById("mfacode")) {
+      observer.disconnect();
+      setupCaptureFrame();
+    }
+  });
+  observer.observe(document.body, config);
+} else {
+  window.addEventListener("load", () => setupCaptureFrame(), false);
+}
 
 const strip = dataUrl => {
   // Remove "data:image/png;base64,"
@@ -60,6 +64,7 @@ const setupCaptureFrame = () => {
           if (res.payload && !res.error) {
             const input = document.getElementById("mfacode");
             input.value = res.payload;
+            // Trigger for Angular
             input.dispatchEvent(new Event("input"));
             const submit = document.getElementById("submitMfa_button");
             submit.click();

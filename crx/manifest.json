@@ -6,7 +6,7 @@
     {
       "matches": [
         "https://*.signin.aws.amazon.com/*",
-        "https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver"
+        "https://www.rust-lang.org/*"
       ],
       "js": ["main.js"],
       "run_at": "document_end"
