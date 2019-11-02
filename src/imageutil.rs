@@ -8,7 +8,7 @@ use imageproc::map::map_colors;
 use imageproc::stats;
 use log::*;
 
-#[cfg(debug_assertions)]
+#[cfg(feature = "trace")]
 fn debug_image<P, C>(name: &'static str, image: &image::ImageBuffer<P, C>)
 where
     P: image::Pixel<Subpixel = u8> + 'static,
@@ -20,14 +20,14 @@ where
     image.save(&path).expect("failed to save image")
 }
 
-#[cfg(debug_assertions)]
+#[cfg(feature = "trace")]
 macro_rules! debug_image {
     ($name:expr,$image:expr) => {
         debug_image($name, $image);
     };
 }
 
-#[cfg(not(debug_assertions))]
+#[cfg(not(feature = "trace"))]
 macro_rules! debug_image {
     ($name:expr,$image:expr) => {
         ();
@@ -56,14 +56,14 @@ pub fn normalize(png: &Vec<u8>) -> image::GrayImage {
     let lines: Vec<PolarLine> = detect_lines(&edge_image, options);
     debug!("lines={:?}", lines);
 
-    if cfg!(debug_assertions) {
+    if cfg!(feature = "trace") {
         // Draw lines on top of edge image
         let white = Rgb([255, 255, 255]);
         let green = Rgb([0, 255, 0]);
         let black = Rgb([0, 0, 0]);
         let color_edges = map_colors(&edge_image, |p| if p[0] > 0 { white } else { black });
-        let lines_image = draw_polar_lines(&color_edges, &lines, green);
-        debug_image!("03-lines", &lines_image);
+        let _lines_image = draw_polar_lines(&color_edges, &lines, green);
+        debug_image!("03-lines", &_lines_image);
     }
 
     // Calculate angle for rotation
