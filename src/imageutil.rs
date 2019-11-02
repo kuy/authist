@@ -7,44 +7,37 @@ use imageproc::hough::{detect_lines, draw_polar_lines, LineDetectionOptions, Pol
 use imageproc::map::map_colors;
 use imageproc::stats;
 use log::*;
-use std::path::Path;
 
 pub fn normalize(png: &Vec<u8>) -> image::GrayImage {
     // Load and resize image, then convert to grayscale
     let orig_image = load(png, ImageFormat::PNG).expect("Failed to load image");
-
-    // Save grayscale image in output directory
-    let output_dir = Path::new("/Users/kuy/Work/au2far-ocr/process");
-    let gray_path = output_dir.join("gray.png");
     let gray_image = orig_image.resize(256, 256, FilterType::Triangle).to_luma();
-    gray_image.save(&gray_path).unwrap();
+    debug_image("01-gray", &gray_image);
 
     // Calc percentile
     let percentile = stats::percentile(&gray_image, 50);
     debug!("percentile={}", percentile);
 
     // Detect edges using Canny algorithm
-    let edges = canny(&gray_image, 50.0, 100.0);
-    let canny_path = output_dir.join("canny.png");
-    edges.save(&canny_path).unwrap();
+    let edge_image = canny(&gray_image, 50.0, 100.0);
+    debug_image("02-edge", &edge_image);
 
     // Detect lines using Hough transform
     let options = LineDetectionOptions {
         vote_threshold: 80,
         suppression_radius: 8,
     };
-    let lines: Vec<PolarLine> = detect_lines(&edges, options);
+    let lines: Vec<PolarLine> = detect_lines(&edge_image, options);
     debug!("lines={:?}", lines);
 
     let white = Rgb([255, 255, 255]);
     let green = Rgb([0, 255, 0]);
     let black = Rgb([0, 0, 0]);
-    let color_edges = map_colors(&edges, |p| if p[0] > 0 { white } else { black });
+    let color_edges = map_colors(&edge_image, |p| if p[0] > 0 { white } else { black });
 
     // Draw lines on top of edge image
     let lines_image = draw_polar_lines(&color_edges, &lines, green);
-    let lines_path = output_dir.join("lines.png");
-    lines_image.save(&lines_path).unwrap();
+    debug_image("03-lines", &lines_image);
 
     // Calculate angle for rotation
     let selected: Vec<f32> = lines
@@ -64,18 +57,27 @@ pub fn normalize(png: &Vec<u8>) -> image::GrayImage {
     let black = Luma([0]);
     let gray_image = orig_image.to_luma();
     let rotated_image = rotate_about_center(&gray_image, rad, Interpolation::Bilinear, black);
-    let rotated_path = output_dir.join("rotated.png");
-    rotated_image.save(&rotated_path).unwrap();
+    debug_image("04-rotated", &rotated_image);
 
     // Binarize image
-    let mut bnw_image = threshold(&rotated_image, 160);
+    let mut norm_image = threshold(&rotated_image, 160);
     if percentile < 100 {
-        invert(&mut bnw_image);
+        invert(&mut norm_image);
         debug!("inverted=true");
     } else {
         debug!("inverted=false");
     }
-    let bnw_path = output_dir.join("bnw.png");
-    bnw_image.save(&bnw_path).unwrap();
-    bnw_image
+    debug_image("05-norm", &norm_image);
+    norm_image
+}
+
+fn debug_image<P, C>(name: &'static str, image: &image::ImageBuffer<P, C>)
+where
+    P: image::Pixel<Subpixel = u8> + 'static,
+    C: std::ops::Deref<Target = [u8]>,
+{
+    let dir = std::path::Path::new("./process");
+    std::fs::create_dir_all(dir).expect("failed to create dir");
+    let path = dir.join(format!("{}.png", name));
+    image.save(&path).expect("failed to save image")
 }
