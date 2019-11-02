@@ -1,9 +1,11 @@
 mod imageutil;
 mod ocr;
 
-use base64::decode;
+use base64;
+use log::*;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use simplelog::{Config, LevelFilter, WriteLogger};
 use std::convert::TryInto;
 use std::error::Error;
 use std::fs::File;
@@ -20,38 +22,38 @@ struct ErrorResponse {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let file = File::create("./process.log")?;
+    WriteLogger::init(LevelFilter::Debug, Config::default(), file)?;
+    debug!("Started");
+
     loop {
-        // Check length of message (first 4 bytes)
+        debug!("Ready: waiting for message from STDIN...");
+
+        // Parse message length (first 4 bytes)
         let handle = io::stdin().take(4);
         let bytes: Vec<u8> = handle.bytes().map(|i| i.unwrap()).collect();
         let size = u32::from_le_bytes(bytes.as_slice().try_into().unwrap());
+        debug!("Message: size={}", size);
 
-        // Receive message body
+        // Read payload and decode PNG
         let mut buf = String::new();
         let mut handle = io::stdin().take(size as u64);
         let len = handle.read_to_string(&mut buf)?;
-
+        // TODO: check expected length and received length
+        debug!("Message: received={}", len);
         let message: Message = serde_json::from_str(&buf)?;
+        trace!("Message: body={}", message.payload);
+        let png = base64::decode(&message.payload)?;
 
-        let mut file = File::create("/Users/kuy/Work/au2far-ocr/output.txt")?;
-        write!(file, "size={}\nread={}", size, len)?;
-
-        let png = decode(&message.payload)?;
-
-        // Normalize image
+        // Preprocessing and OCR
         let img = imageutil::normalize(&png);
+        let raw = ocr::scan(img).expect("Failed to recognize code");
+        debug!("OCR: raw={}", raw);
 
-        // Scan code
-        let code = ocr::scan(img).expect("Failed to recognize code");
-
-        let mut file = File::create("/Users/kuy/Work/au2far-ocr/ocr.txt")?;
-        write!(file, "raw={}\n", code)?;
-
-        // Sanitize result
         let re = Regex::new(r"[\d\s]{6,}").unwrap();
-        let res = match re.find(&code) {
-            Some(code) => {
-                let raw = String::from(code.as_str());
+        let res = match re.find(&raw) {
+            Some(text) => {
+                let raw = String::from(text.as_str());
                 let re = Regex::new(r"[^\d]").unwrap();
                 let code = String::from(re.replace_all(&raw, ""));
                 serde_json::to_string(&Message { payload: code }).unwrap()
@@ -62,11 +64,11 @@ fn main() -> Result<(), Box<dyn Error>> {
             .unwrap(),
         };
 
-        write!(file, "code={}\n", res)?;
-
         // Send response
         io::stdout().write_all(&u32::to_le_bytes(res.len() as u32))?;
         write!(io::stdout(), "{}", res)?;
         io::stdout().flush()?;
+
+        debug!("Done: res={}", res);
     }
 }
