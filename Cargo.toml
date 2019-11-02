@@ -1,8 +1,9 @@
 [package]
-name = "au2far"
-version = "0.1.0"
+name = "authist"
+version = "0.0.0"
 authors = ["Yuki Kodama <endflow.net@gmail.com>"]
 edition = "2018"
+publish = false
 
 [dependencies]
 anyhow = "1.0"
