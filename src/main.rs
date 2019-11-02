@@ -3,8 +3,8 @@ mod ocr;
 
 use base64;
 use log::*;
-use regex::Regex;
 use serde::{Deserialize, Serialize};
+use serde_json::{from_str, to_string};
 use simplelog::{Config, LevelFilter, SimpleLogger, WriteLogger};
 use std::convert::TryInto;
 use std::error::Error;
@@ -16,7 +16,7 @@ struct Message {
 }
 
 #[derive(Serialize, Debug)]
-struct ErrorResponse {
+struct ErrorRes {
     error: String,
 }
 
@@ -44,7 +44,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         let len = handle.read_to_string(&mut buf)?;
         // TODO: check expected length and received length
         debug!("Message: received={}", len);
-        let message: Message = serde_json::from_str(&buf)?;
+        let message: Message = from_str(&buf)?;
         trace!("Message: body={}", message.payload);
         let png = base64::decode(&message.payload)?;
 
@@ -53,19 +53,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         let raw = ocr::scan(img).expect("Failed to recognize code");
         debug!("OCR: raw={}", raw);
 
-        let re = Regex::new(r"[\d\s]{6,}").unwrap();
-        let res = match re.find(&raw) {
-            Some(text) => {
-                let raw = String::from(text.as_str());
-                let re = Regex::new(r"[^\d]").unwrap();
-                let code = String::from(re.replace_all(&raw, ""));
-                serde_json::to_string(&Message { payload: code }).unwrap()
-            }
-            None => serde_json::to_string(&ErrorResponse {
+        let res = match ocr::sanitize(&raw) {
+            Ok(code) => to_string(&Message { payload: code }),
+            Err(_) => to_string(&ErrorRes {
                 error: "scan".into(),
-            })
-            .unwrap(),
-        };
+            }),
+        }?;
 
         // Send response
         io::stdout().write_all(&u32::to_le_bytes(res.len() as u32))?;

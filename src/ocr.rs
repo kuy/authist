@@ -2,6 +2,7 @@ use anyhow::{anyhow, Context, Result};
 use leptess::capi::pixReadMemPng;
 use leptess::leptonica;
 use leptess::tesseract::TessApi;
+use regex::Regex;
 
 pub fn scan(img: image::GrayImage) -> Result<String> {
     // Export image as PNG format to in-memory buffer
@@ -24,5 +25,22 @@ pub fn scan(img: image::GrayImage) -> Result<String> {
         api.set_image(&pix);
         let text = api.get_utf8_text()?;
         Ok(text)
+    }
+}
+
+pub fn sanitize(raw: &String) -> Result<String> {
+    let pat = Regex::new(r"[\d\s]{6,}").unwrap();
+    match pat.find(&raw) {
+        Some(text) => {
+            let raw = String::from(text.as_str());
+            let pat = Regex::new(r"[^\d]").unwrap();
+            let code = pat.replace_all(&raw, "");
+            Ok(String::from(if code.len() > 6 {
+                &code[..6]
+            } else {
+                &code
+            }))
+        }
+        None => Err(anyhow!("not-detected")),
     }
 }

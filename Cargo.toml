@@ -19,3 +19,6 @@ regex = "1"
 
 [features]
 trace = []
+
+[profile.release]
+lto = true
