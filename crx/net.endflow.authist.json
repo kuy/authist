@@ -1,0 +1,7 @@
+{
+  "name": "net.endflow.authist",
+  "description": "Authist",
+  "path": "/Users/kuy/Work/authist/target/release/authist",
+  "type": "stdio",
+  "allowed_origins": ["chrome-extension://hojhgepgambmlkgingfmmjghlagmkjoj/"]
+}

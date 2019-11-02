@@ -1,0 +1,21 @@
+{
+  "name": "Authist",
+  "version": "0.0.0",
+  "description": "Assists MFA/2FA",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.signin.aws.amazon.com/*",
+        "https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver"
+      ],
+      "js": ["main.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "permissions": ["nativeMessaging", "tabs"],
+  "manifest_version": 2
+}
