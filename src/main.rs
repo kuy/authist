@@ -19,10 +19,7 @@ fn main() -> Result<()> {
                 trace!("Message: body={}", payload);
                 payload
             }
-            Message::Error { error } => {
-                error!("Message: error={}", error);
-                continue;
-            }
+            _ => continue,
         };
         let png = base64::decode(&payload)?;
 
