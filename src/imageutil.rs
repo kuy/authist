@@ -8,11 +8,37 @@ use imageproc::map::map_colors;
 use imageproc::stats;
 use log::*;
 
+#[cfg(debug_assertions)]
+fn debug_image<P, C>(name: &'static str, image: &image::ImageBuffer<P, C>)
+where
+    P: image::Pixel<Subpixel = u8> + 'static,
+    C: std::ops::Deref<Target = [u8]>,
+{
+    let dir = std::path::Path::new("./process");
+    std::fs::create_dir_all(dir).expect("failed to create dir");
+    let path = dir.join(format!("{}.png", name));
+    image.save(&path).expect("failed to save image")
+}
+
+#[cfg(debug_assertions)]
+macro_rules! debug_image {
+    ($name:expr,$image:expr) => {
+        debug_image($name, $image);
+    };
+}
+
+#[cfg(not(debug_assertions))]
+macro_rules! debug_image {
+    ($name:expr,$image:expr) => {
+        ();
+    };
+}
+
 pub fn normalize(png: &Vec<u8>) -> image::GrayImage {
     // Load and resize image, then convert to grayscale
     let orig_image = load(png, ImageFormat::PNG).expect("Failed to load image");
     let gray_image = orig_image.resize(256, 256, FilterType::Triangle).to_luma();
-    debug_image("01-gray", &gray_image);
+    debug_image!("01-gray", &gray_image);
 
     // Calc percentile
     let percentile = stats::percentile(&gray_image, 50);
@@ -20,7 +46,7 @@ pub fn normalize(png: &Vec<u8>) -> image::GrayImage {
 
     // Detect edges using Canny algorithm
     let edge_image = canny(&gray_image, 50.0, 100.0);
-    debug_image("02-edge", &edge_image);
+    debug_image!("02-edge", &edge_image);
 
     // Detect lines using Hough transform
     let options = LineDetectionOptions {
@@ -30,14 +56,15 @@ pub fn normalize(png: &Vec<u8>) -> image::GrayImage {
     let lines: Vec<PolarLine> = detect_lines(&edge_image, options);
     debug!("lines={:?}", lines);
 
-    let white = Rgb([255, 255, 255]);
-    let green = Rgb([0, 255, 0]);
-    let black = Rgb([0, 0, 0]);
-    let color_edges = map_colors(&edge_image, |p| if p[0] > 0 { white } else { black });
-
-    // Draw lines on top of edge image
-    let lines_image = draw_polar_lines(&color_edges, &lines, green);
-    debug_image("03-lines", &lines_image);
+    if cfg!(debug_assertions) {
+        // Draw lines on top of edge image
+        let white = Rgb([255, 255, 255]);
+        let green = Rgb([0, 255, 0]);
+        let black = Rgb([0, 0, 0]);
+        let color_edges = map_colors(&edge_image, |p| if p[0] > 0 { white } else { black });
+        let lines_image = draw_polar_lines(&color_edges, &lines, green);
+        debug_image!("03-lines", &lines_image);
+    }
 
     // Calculate angle for rotation
     let selected: Vec<f32> = lines
@@ -57,7 +84,7 @@ pub fn normalize(png: &Vec<u8>) -> image::GrayImage {
     let black = Luma([0]);
     let gray_image = orig_image.to_luma();
     let rotated_image = rotate_about_center(&gray_image, rad, Interpolation::Bilinear, black);
-    debug_image("04-rotated", &rotated_image);
+    debug_image!("04-rotated", &rotated_image);
 
     // Binarize image
     let mut norm_image = threshold(&rotated_image, 160);
@@ -67,17 +94,6 @@ pub fn normalize(png: &Vec<u8>) -> image::GrayImage {
     } else {
         debug!("inverted=false");
     }
-    debug_image("05-norm", &norm_image);
+    debug_image!("05-norm", &norm_image);
     norm_image
-}
-
-fn debug_image<P, C>(name: &'static str, image: &image::ImageBuffer<P, C>)
-where
-    P: image::Pixel<Subpixel = u8> + 'static,
-    C: std::ops::Deref<Target = [u8]>,
-{
-    let dir = std::path::Path::new("./process");
-    std::fs::create_dir_all(dir).expect("failed to create dir");
-    let path = dir.join(format!("{}.png", name));
-    image.save(&path).expect("failed to save image")
 }

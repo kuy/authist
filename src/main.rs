@@ -5,10 +5,9 @@ use base64;
 use log::*;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use simplelog::{Config, LevelFilter, WriteLogger};
+use simplelog::{Config, LevelFilter, SimpleLogger, WriteLogger};
 use std::convert::TryInto;
 use std::error::Error;
-use std::fs::File;
 use std::io::{self, Read, Write};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -22,9 +21,13 @@ struct ErrorResponse {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let file = File::create("./process.log")?;
-    WriteLogger::init(LevelFilter::Debug, Config::default(), file)?;
-    debug!("Started");
+    if cfg!(debug_assertions) {
+        let file = std::fs::File::create("./process.log")?;
+        WriteLogger::init(LevelFilter::Debug, Config::default(), file)?;
+        debug!("Started");
+    } else {
+        SimpleLogger::init(LevelFilter::Off, Config::default())?;
+    }
 
     loop {
         debug!("Ready: waiting for message from STDIN...");
