@@ -8,7 +8,7 @@
         "https://*.signin.aws.amazon.com/*",
         "https://www.rust-lang.org/*"
       ],
-      "js": ["main.js"],
+      "js": ["dist/bundle.js"],
       "run_at": "document_end"
     }
   ],
