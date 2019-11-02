@@ -80,7 +80,7 @@ pub fn normalize(png: &Vec<u8>) -> image::GrayImage {
 
     // Binarize image
     let mut bnw_image = threshold(&rotated_image, 160);
-    if pth_intensity < 128 {
+    if pth_intensity < 100 {
         invert(&mut bnw_image);
         write!(log, "inverted=true\n").expect("Failed to write log file");
     } else {

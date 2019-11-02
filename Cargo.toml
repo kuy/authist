@@ -5,6 +5,7 @@ authors = ["Yuki Kodama <endflow.net@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+anyhow = "1.0"
 base64 = "0.11.0"
 leptess = "0.8.0"
 imageproc = "0.19.2"
