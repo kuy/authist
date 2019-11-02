@@ -1,5 +1,5 @@
-mod imageutil;
 mod ocr;
+mod preprocess;
 
 use base64;
 use log::*;
@@ -49,7 +49,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         let png = base64::decode(&message.payload)?;
 
         // Preprocessing and OCR
-        let img = imageutil::normalize(&png);
+        let img = preprocess::normalize(&png);
         let raw = ocr::scan(img).expect("Failed to recognize code");
         debug!("OCR: raw={}", raw);
 
