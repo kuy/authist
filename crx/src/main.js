@@ -10,8 +10,6 @@ const run = async () => {
     } catch (e) {
       console.log("Abort by plugin");
     }
-  } else {
-    console.log("Failed to dispatch");
   }
 };
 

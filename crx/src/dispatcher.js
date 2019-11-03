@@ -1,12 +1,18 @@
 const dispatch = async () => {
-  const url = window.location.href;
+  const current = window.location.href;
   for (let entry of PLUGINS) {
-    if (entry.url.test(url)) {
-      const plugin = await load_plugin(entry.name);
-      if (plugin) {
-        return plugin;
-      } else {
-        console.warn(`Failed to load: ${entry.name}`);
+    let urls = entry.url;
+    if (!(typeof urls === "object" && typeof urls.length !== "undefined")) {
+      urls = [urls];
+    }
+    for (let url of urls) {
+      if (url.test(current)) {
+        const plugin = await load_plugin(entry.name);
+        if (plugin) {
+          return plugin;
+        } else {
+          console.warn(`Failed to load: ${entry.name}`);
+        }
       }
     }
   }
@@ -21,6 +27,13 @@ const PLUGINS = [
   {
     name: "twitter",
     url: /^https:\/\/twitter\.com\/account\/login_verification/
+  },
+  {
+    name: "coincheck",
+    url: [
+      /^https:\/\/coincheck.com\/\w+\/sessions\/two_factor_auth/,
+      /^https:\/\/coincheck.com\/sessions\/two_factor_auth/
+    ]
   },
   {
     name: "rust-lang",

@@ -21,7 +21,7 @@ const submit = code => {
   if (input) {
     input.value = code;
 
-    // NOTE: Required to trigger change for Angular app
+    // NOTE: Trigger Angular app
     input.dispatchEvent(new Event("input"));
 
     const button = document.getElementById("submitMfa_button");
