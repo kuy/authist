@@ -36,9 +36,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       }
       break;
     case "load":
-      chrome.tabs.executeScript(id, { file: `sites/${msg.payload}.js` }, () => {
-        console.log(`MSG [tab=${id}]: loaded=${msg.payload}`);
-        sendResponse({ type: "load", payload: "OK", tab: id });
+      chrome.tabs.executeScript(id, { file: `plugin-runtime.js` }, () => {
+        chrome.tabs.executeScript(
+          id,
+          { file: `sites/${msg.payload}.js` },
+          () => {
+            console.log(`MSG [tab=${id}]: loaded=${msg.payload}`);
+            sendResponse({ type: "load", payload: "OK", tab: id });
+          }
+        );
       });
       return true;
     default:

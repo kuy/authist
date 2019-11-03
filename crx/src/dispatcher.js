@@ -1,9 +1,24 @@
-const SITES = [
-  { name: "aws", url: /^https:\/\/\w+\.signin\.aws\.amazon\.com\// },
+const dispatch = async () => {
+  const url = window.location.href;
+  for (let entry of PLUGINS) {
+    if (entry.url.test(url)) {
+      const plugin = await load_plugin(entry.name);
+      if (plugin) {
+        return plugin;
+      } else {
+        console.warn(`Failed to load: ${entry.name}`);
+      }
+    }
+  }
+  return null;
+};
+
+const PLUGINS = [
+  { name: "aws", url: /^https:\/\/[\w-]+\.signin\.aws\.amazon\.com\// },
   { name: "rust-lang", url: /^https:\/\/www\.rust-lang\.org/ }
 ];
 
-const load_site_plugin = async name => {
+const load_plugin = async name => {
   return new Promise(resolve => {
     console.log(`dispatcher.load: req=${name}`);
     chrome.runtime.sendMessage(
@@ -74,20 +89,5 @@ class Plugin {
     );
   }
 }
-
-const dispatch = async () => {
-  const url = window.location.href;
-  for (let site of SITES) {
-    if (site.url.test(url)) {
-      const plugin = await load_site_plugin(site.name);
-      if (plugin) {
-        return plugin;
-      } else {
-        console.warn(`Failed to load: ${site.name}`);
-      }
-    }
-  }
-  return null;
-};
 
 module.exports = { dispatch };

@@ -16,7 +16,7 @@
     "scripts": ["background.js"],
     "persistent": false
   },
-  "web_accessible_resources": ["sites/*.js"],
+  "web_accessible_resources": ["plugin-runtime.js", "sites/*.js"],
   "permissions": ["nativeMessaging", "tabs", "activeTab", "https://*/*"],
   "manifest_version": 2
 }

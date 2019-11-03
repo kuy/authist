@@ -9,6 +9,7 @@ const ready = async () => {
         }
       });
       observer.observe(document.body, config);
+      // TODO: need timeout?
     } else {
       reject();
     }
@@ -23,5 +24,4 @@ const submit = code => {
   submit.click();
 };
 
-module.exports.ready = ready;
-module.exports.submit = submit;
+window.__AUTHIST_PLUGIN_RUNTIME__({ ready, submit });

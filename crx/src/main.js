@@ -4,7 +4,7 @@ const run = async () => {
   const plugin = await dispatch();
   if (plugin) {
     try {
-      await plugin.ready();
+      await plugin.ready(); // TODO: need timeout?
       const code = await capture();
       await plugin.submit(code);
     } catch (e) {
