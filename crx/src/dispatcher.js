@@ -25,6 +25,10 @@ const PLUGINS = [
     url: /^https:\/\/[\w-]+\.signin\.aws\.amazon\.com\//
   },
   {
+    name: "github",
+    url: /^https:\/\/github\.com\/sessions\/two-factor/
+  },
+  {
     name: "twitter",
     url: /^https:\/\/twitter\.com\/account\/login_verification/
   },
@@ -34,6 +38,10 @@ const PLUGINS = [
       /^https:\/\/coincheck.com\/\w+\/sessions\/two_factor_auth/,
       /^https:\/\/coincheck.com\/sessions\/two_factor_auth/
     ]
+  },
+  {
+    name: "amazon-co-jp",
+    url: /^https:\/\/www\.amazon\.co\.jp\/ap\/mfa/
   },
   {
     name: "rust-lang",
