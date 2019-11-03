@@ -35,11 +35,11 @@ pub fn sanitize(raw: &String) -> Result<String> {
             let raw = String::from(text.as_str());
             let pat = Regex::new(r"[^\d]").unwrap();
             let code = pat.replace_all(&raw, "");
-            Ok(String::from(if code.len() > 6 {
-                &code[..6]
-            } else {
-                &code
-            }))
+            match code.len() {
+                6 => Ok(String::from(code)),
+                n if n > 6 => Ok(String::from(&code[..6])),
+                _ => Err(anyhow!("less-than-six-digits")),
+            }
         }
         None => Err(anyhow!("not-detected")),
     }
