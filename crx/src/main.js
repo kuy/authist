@@ -1,18 +1,17 @@
 const { dispatch } = require("./dispatcher");
 
 const run = async () => {
-  const service = await dispatch();
-  if (service) {
+  const plugin = await dispatch();
+  if (plugin) {
     try {
-      await service.ready();
+      await plugin.ready();
       const code = await capture();
-      service.submit(code);
-      console.log("Done");
+      await plugin.submit(code);
     } catch (e) {
-      console.error("Abort by service");
+      console.log("Abort by plugin");
     }
   } else {
-    console.error("No services");
+    console.log("Failed to dispatch");
   }
 };
 
@@ -53,7 +52,7 @@ const capture = () => {
         };
       })
       .catch(err => {
-        console.error(err.name + ": " + err.message);
+        console.error(err);
       });
 
     const canvas = document.createElement("canvas");
@@ -82,7 +81,7 @@ const capture = () => {
       const data = strip(canvas.toDataURL());
       chrome.runtime.sendMessage(
         "hojhgepgambmlkgingfmmjghlagmkjoj",
-        { payload: data },
+        { type: "ocr", payload: data },
         res => {
           if (res.payload && !res.error) {
             const code = res.payload;
