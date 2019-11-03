@@ -4,10 +4,7 @@
   "description": "Assists MFA/2FA",
   "content_scripts": [
     {
-      "matches": [
-        "https://*.signin.aws.amazon.com/*",
-        "https://www.rust-lang.org/*"
-      ],
+      "matches": ["https://*/*"],
       "js": ["dist/bundle.js"],
       "run_at": "document_end"
     }

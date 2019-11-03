@@ -18,10 +18,15 @@ const ready = async () => {
 
 const submit = code => {
   const input = document.getElementById("mfacode");
-  input.value = code;
-  input.dispatchEvent(new Event("input")); // for Angular
-  const submit = document.getElementById("submitMfa_button");
-  submit.click();
+  if (input) {
+    input.value = code;
+
+    // NOTE: Required to trigger change for Angular app
+    input.dispatchEvent(new Event("input"));
+
+    const button = document.getElementById("submitMfa_button");
+    button.click();
+  }
 };
 
 window.__AUTHIST_PLUGIN_RUNTIME__({ ready, submit });

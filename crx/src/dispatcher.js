@@ -14,8 +14,18 @@ const dispatch = async () => {
 };
 
 const PLUGINS = [
-  { name: "aws", url: /^https:\/\/[\w-]+\.signin\.aws\.amazon\.com\// },
-  { name: "rust-lang", url: /^https:\/\/www\.rust-lang\.org/ }
+  {
+    name: "aws",
+    url: /^https:\/\/[\w-]+\.signin\.aws\.amazon\.com\//
+  },
+  {
+    name: "twitter",
+    url: /^https:\/\/twitter\.com\/account\/login_verification/
+  },
+  {
+    name: "rust-lang",
+    url: /^https:\/\/www\.rust-lang\.org/
+  }
 ];
 
 const load_plugin = async name => {

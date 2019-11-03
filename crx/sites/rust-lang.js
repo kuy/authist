@@ -27,7 +27,6 @@ const ready = async () => {
 };
 
 const submit = code => {
-  console.log(`rust-lang: code=${code}`);
   const h1 = find();
   if (h1) {
     h1.innerHTML = code;
