@@ -1,31 +1,28 @@
 const ready = async () => {
   return new Promise((resolve, reject) => {
-    if (document.getElementById("input_account")) {
+    const input = document.getElementById("totpPin");
+    if (input) {
+      resolve();
+    } else {
       const config = { attributes: false, childList: true, subtree: true };
       const observer = new MutationObserver(() => {
-        if (document.getElementById("mfacode")) {
+        if (document.getElementById("totpPin")) {
           observer.disconnect();
           resolve();
         }
         // TODO: need timeout? or retry limit?
       });
       observer.observe(document.body, config);
-    } else {
-      reject();
     }
   });
 };
 
 const submit = code => {
-  const input = document.getElementById("mfacode");
+  const input = document.getElementById("totpPin");
   if (input) {
     input.value = code;
-
-    // NOTE: Trigger Angular app
-    input.dispatchEvent(new Event("input"));
-
-    const button = document.getElementById("submitMfa_button");
-    button.click();
+    const button = document.getElementById("totpNext");
+    button && button.click();
   }
 };
 

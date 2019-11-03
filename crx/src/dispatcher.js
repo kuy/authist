@@ -33,15 +33,22 @@ const PLUGINS = [
     url: /^https:\/\/twitter\.com\/account\/login_verification/
   },
   {
-    name: "coincheck",
+    name: "google",
     url: [
-      /^https:\/\/coincheck.com\/\w+\/sessions\/two_factor_auth/,
-      /^https:\/\/coincheck.com\/sessions\/two_factor_auth/
+      /^https:\/\/accounts\.google\.com\/ServiceLogin/,
+      /^https:\/\/accounts\.google\.com\/signin\/v2\/challenge\/totp/
     ]
   },
   {
     name: "amazon-co-jp",
     url: /^https:\/\/www\.amazon\.co\.jp\/ap\/mfa/
+  },
+  {
+    name: "coincheck",
+    url: [
+      /^https:\/\/coincheck.com\/\w+\/sessions\/two_factor_auth/,
+      /^https:\/\/coincheck.com\/sessions\/two_factor_auth/
+    ]
   },
   {
     name: "rust-lang",

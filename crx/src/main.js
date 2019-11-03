@@ -25,7 +25,7 @@ const capture = () => {
     const frame = document.createElement("div");
     frame.setAttribute(
       "style",
-      "position: fixed; width: 320px; height: 240px; right: 0; bottom: 0;"
+      "position: fixed; width: 320px; height: 240px; right: 0; bottom: 0; z-index: 1;"
     );
     document.body.appendChild(frame);
 
