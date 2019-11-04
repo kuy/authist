@@ -30,6 +30,10 @@ or [manual installation](#manual-installation).
 3. Drag and drop the extension file into Chrome window
 4. Click "Add extension" button to install the extension
 
+#### Troubleshooting: Gatekeeper
+
+Get errors from Gatekeeper? Allow it in `Security & Privacy` > `General`.
+
 ### 4. Test your installation
 
 1. Go to [https://rust-lang.org](https://rust-lang.org)
