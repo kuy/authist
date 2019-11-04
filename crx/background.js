@@ -17,6 +17,10 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
+chrome.browserAction.onClicked.addListener(tab => {
+  chrome.tabs.sendMessage(tab.id, { type: "capture", output: "clipboard" });
+});
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   const id = sender.tab.id;
   console.log(`MSG [tab=${id}]: len=${JSON.stringify(msg).length}`);

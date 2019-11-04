@@ -7,7 +7,7 @@ Automatic 2FA/MFA assistant with OCR your smartphone.
 Authist is a Chrome extension that recognizes an authentication code shown
 in the authenticator app of your smartphone via web camera and inputs it instead of you.
 
-_NOTE: Supported only **Authy Authenticator + macOS + Google Chrome**_
+_NOTE: Supported only_ **Authy Authenticator + macOS + Google Chrome**
 
 ## Install
 
