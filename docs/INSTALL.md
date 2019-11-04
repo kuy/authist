@@ -1,0 +1,44 @@
+## Install
+
+### System requirements
+
+- Authy 24.0.0 or later
+- macOS Mojave 10.14 or Catalina 10.15
+- Google Chrome 77 or later
+
+### 1. Install required libraries
+
+```
+brew install tesseract leptonica
+```
+
+### 2. Install native app
+
+Run command below:
+
+```
+curl -sSf https://raw.githubusercontent.com/kuy/authist/master/install.sh | sh
+```
+
+or [manual installation](#manual-installation).
+
+### 3. Install Chrome extension
+
+1. Download latest extension file (`authist.crx`) from [releases page](https://github.com/kuy/authist/releases)
+2. Open "Extensions" page in your Chrome browser (Menu: `Window` > `Extensions`)
+3. Drag and drop the extension file into Chrome window
+4. Select "Add extension" button to install the extension
+
+### 4. Test your installation
+
+1. Go to [https://www.rust-lang.org](https://www.rust-lang.org)
+2. Chrome asks to use FaceTime camera. Allow it
+3. Authist starts scanning. Open Authy in your smartphone
+4. Turn your smartphone to FaceTime camera
+5. Authist detects a code and shows you it!
+
+![install-result](https://raw.githubusercontent.com/kuy/authist/master/docs/assets/result.png)
+
+## Manual installation
+
+See https://github.com/kuy/authist/blob/master/install.sh

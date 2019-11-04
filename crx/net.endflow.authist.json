@@ -1,7 +1,7 @@
 {
   "name": "net.endflow.authist",
   "description": "Authist",
-  "path": "/Users/$USERNAME/.authist/authist",
+  "path": "/Users/##USERNAME##/.authist/authist",
   "type": "stdio",
   "allowed_origins": ["chrome-extension://dkpfpbijkalbbejmdaddpdohoeagjpdd/"]
 }

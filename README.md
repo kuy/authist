@@ -11,7 +11,7 @@ _NOTE: Supported only **Authy Authenticator + macOS + Google Chrome**_
 
 ## Install
 
-Unfortunately, no friendly installer yet. Please follow [instructions to install](https://github.com/kuy/authist/blob/master/INSTALL.md).
+Unfortunately, no friendly installer yet. Please follow [instructions to install](https://github.com/kuy/authist/blob/master/docs/INSTALL.md).
 
 ## Usage
 
