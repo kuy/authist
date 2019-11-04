@@ -30,7 +30,7 @@ if [[ ! -d $APP_DEST ]]; then
   mkdir -p "$APP_DEST"
 fi
 
-mv -f "$TEMP/$APP_NAME" "$APP_DEST/$APP_NAME"
+mv -f "$TEMP/target/release/$APP_NAME" "$APP_DEST/$APP_NAME"
 chmod a+x "$APP_DEST/$APP_NAME"
 
 echo "Install manifest file..."
@@ -40,7 +40,7 @@ if [[ ! -d $MANIFEST_DEST ]]; then
   echo "Create 'NativeMessagingHosts' directory"
   mkdir -p "$MANIFEST_DEST"
 fi
-mv -f "$TEMP/$MANIFEST_NAME" "$MANIFEST_DEST/$MANIFEST_NAME"
+mv -f "$TEMP/crx/$MANIFEST_NAME" "$MANIFEST_DEST/$MANIFEST_NAME"
 LOGIN_USER=$(echo $USER)
 sed -i '' "s/##USERNAME##/${LOGIN_USER}/" "$MANIFEST_DEST/$MANIFEST_NAME"
 
