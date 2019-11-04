@@ -1,8 +1,48 @@
 # Authist
 
+Automatic 2FA/MFA assistant with OCR your smartphone.
+
+## What's this?
+
+Authist is a Chrome extension that recognizes an authentication code shown
+in the authenticator app of your smartphone via web camera and inputs it instead of you.
+
+_NOTE: Supported only **Authy Authenticator + macOS + Google Chrome**_
+
+## Install
+
+Unfortunately, no friendly installer yet. Please follow [instructions to install](https://github.com/kuy/authist/blob/master/INSTALL.md).
+
+## Usage
+
+1. Proceed to a step of two-factor authentication
+2. Click "Allow" to permit using FaceTime camera when Chrome ask
+3. Open the authenticator app in your smartphone and turn the screen toward FaceTime camera
+4. Done!
+
+## Supported services
+
+- Google
+- Amazon Web Service
+- GitHub
+- Twitter
+- Instagram (coming soon)
+- Amazon.co.jp
+- bitFlyer (coming soon)
+- Coincheck
+- _Lots of missing services... PRs are welcome! :)_
+
+## Extra features
+
+- Scan code anywhere and copy to clipboard (WIP)
+
+## Options
+
+- Hide camera preview (coming soon)
+
 ## Development
 
-### Native App
+### Native app
 
 #### Requirements
 
@@ -13,8 +53,6 @@
   - `brew install leptonica`
 - [LLVM](https://llvm.org/)
   - `brew install llvm`
-
-_...Did you found missing deps? Tell me or send me PR :)_
 
 #### Build
 
@@ -30,7 +68,7 @@ To see the process of normalization, use `trace` feature flag:
 cargo build --features "trace"
 ```
 
-### Chrome Extension
+### Chrome extension
 
 #### Requirements
 
