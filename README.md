@@ -90,7 +90,7 @@ px src/main.js dist/bundle.js -w
 5. Bump version `crx/manifest.json`
 6. Build JavaScript `cd crx && px src/main.js dist/bundle.js && cd ..`
 7. Pack extension with Chrome and rename it to `authist-x.x.x.crx`
-8. Commit changes, tag it `vx.x.x`, and push to github
+8. Commit changes, tag with `vx.x.x`, and push to github
 9. Upload `authist-x86_64-apple-darwin.zip` and `authist-x.x.x.crx` into a new release on github
 10. Write release note and publish
 

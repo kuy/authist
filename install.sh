@@ -6,9 +6,9 @@ if [[ ! -d $CHROME  ]]; then
   exit 1
 fi
 
-echo "Download latest release..."
-TEMP=$(mktemp -d)
 VERSION="0.2.0"
+echo "Download $VERSION..."
+TEMP=$(mktemp -d)
 DIST_URL="https://github.com/kuy/authist/releases/download/v$VERSION/authist-x86_64-apple-darwin.zip"
 curl --silent -L -o "$TEMP/authist-dist.zip" "$DIST_URL"
 if [[ $? != 0 ]]; then
