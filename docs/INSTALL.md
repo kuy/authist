@@ -43,3 +43,9 @@ or [manual installation](#manual-installation).
 ## Manual installation
 
 See https://github.com/kuy/authist/blob/master/install.sh
+
+## Uninstall
+
+1. Uninstall Chrome extension
+2. Delete `~/.authist` directory
+3. Delete `~/Library/Application Support/Google/Chrome/NativeMessagingHosts/net.endflow.authist.json`
