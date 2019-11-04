@@ -26,6 +26,17 @@ pub fn receive() -> Result<Message> {
     // TODO: check expected length and received length
     debug!("received={}", len);
     let message: Message = serde_json::from_str(&buf)?;
+
+    if cfg!(feature = "trace") {
+        let dir = std::path::Path::new("./process");
+        std::fs::create_dir_all(dir).expect("create dir");
+        let path = dir.join("payload");
+        let mut file = std::fs::File::create(path).expect("create file");
+        file.write_all(&u32::to_le_bytes(size))?;
+        write!(file, "{}", buf)?;
+        file.flush()?;
+    }
+
     Ok(message)
 }
 
