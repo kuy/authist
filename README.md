@@ -15,10 +15,17 @@ See [instructions to install](https://github.com/kuy/authist/blob/master/docs/IN
 
 ## Usage
 
+### Basic
+
 1. Proceed to a step of two-factor authentication
 2. Click "Allow" to permit using FaceTime camera when Chrome ask
 3. Open the authenticator app in your smartphone and turn the screen toward FaceTime camera
 4. Done!
+
+### Advanced
+
+Start scanner anywhere by clicking Authist toolbar button.
+The recognized code will be copied in clipboard.
 
 ## Supported services
 
@@ -34,7 +41,7 @@ See [instructions to install](https://github.com/kuy/authist/blob/master/docs/IN
 
 ## Extra features
 
-- Scan code anywhere and copy to clipboard (WIP)
+- Scan anywhere and input focused text field (WIP)
 
 ## Options
 
