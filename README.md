@@ -85,7 +85,7 @@ px src/main.js dist/bundle.js -w
 
 1. Bump version `Cargo.toml`
 2. Build native app with release flag `cargo build --release`
-3. Create zip archive `zip authist-x86_64-apple-darwin.zip target/release/authist crx/net.endflow.authist.json`
+3. Create zip archive `zip -j authist-x86_64-apple-darwin.zip target/release/authist crx/net.endflow.authist.json`
 4. Update `DIST_URL` in `install.sh` with a new version
 5. Bump version `crx/manifest.json`
 6. Build JavaScript `cd crx && px src/main.js dist/bundle.js`
