@@ -61,7 +61,7 @@ const capture = () => {
 
       const data = strip(canvas.toDataURL());
       chrome.runtime.sendMessage(
-        "hojhgepgambmlkgingfmmjghlagmkjoj",
+        "dkpfpbijkalbbejmdaddpdohoeagjpdd",
         { type: "ocr", payload: data },
         res => {
           if (res.payload && !res.error) {

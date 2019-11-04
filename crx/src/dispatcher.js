@@ -60,7 +60,7 @@ const load_plugin = async name => {
   return new Promise(resolve => {
     console.log(`dispatcher.load: req=${name}`);
     chrome.runtime.sendMessage(
-      "hojhgepgambmlkgingfmmjghlagmkjoj",
+      "dkpfpbijkalbbejmdaddpdohoeagjpdd",
       { type: "load", payload: name },
       res => {
         console.log(`dispatcher.load: res=${JSON.stringify(res)}`);
