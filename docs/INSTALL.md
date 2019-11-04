@@ -4,6 +4,7 @@
 
 - Authy 24.0.0 or later
 - macOS Mojave 10.14 or Catalina 10.15
+  - with Homebrew (`brew`) and `curl`
 - Google Chrome 77 or later
 
 ### 1. Install required libraries
@@ -24,7 +25,7 @@ or [manual installation](#manual-installation).
 
 ### 3. Install Chrome extension
 
-1. Download latest extension file (`authist.crx`) from [releases page](https://github.com/kuy/authist/releases)
+1. Download latest extension file (`authist-x.x.x.crx`) from [releases page](https://github.com/kuy/authist/releases)
 2. Open "Extensions" page in your Chrome browser (Menu: `Window` > `Extensions`)
 3. Drag and drop the extension file into Chrome window
 4. Select "Add extension" button to install the extension
