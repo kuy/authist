@@ -44,6 +44,10 @@ const PLUGINS = [
     url: /^https:\/\/www\.amazon\.co\.jp\/ap\/mfa/
   },
   {
+    name: "bitflyer",
+    url: /^https:\/\/bitflyer\.com\/[\w-]+\/ex\/twofactorauth/
+  },
+  {
     name: "coincheck",
     url: [
       /^https:\/\/coincheck.com\/\w+\/sessions\/two_factor_auth/,
@@ -60,7 +64,7 @@ const load_plugin = async name => {
   return new Promise(resolve => {
     console.log(`dispatcher.load: req=${name}`);
     chrome.runtime.sendMessage(
-      "dkpfpbijkalbbejmdaddpdohoeagjpdd",
+      chrome.runtime.id,
       { type: "load", payload: name },
       res => {
         console.log(`dispatcher.load: res=${JSON.stringify(res)}`);
