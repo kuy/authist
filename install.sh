@@ -8,7 +8,8 @@ fi
 
 echo "Download latest release..."
 TEMP=$(mktemp -d)
-DIST_URL="https://github.com/kuy/authist/releases/download/v0.1.0/authist-x86_64-apple-darwin.zip"
+VERSION="0.2.0"
+DIST_URL="https://github.com/kuy/authist/releases/download/v$VERSION/authist-x86_64-apple-darwin.zip"
 curl --silent -L -o "$TEMP/authist-dist.zip" "$DIST_URL"
 if [[ $? != 0 ]]; then
   echo "ERROR: Failed to download archive"

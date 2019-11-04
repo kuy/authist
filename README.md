@@ -86,9 +86,9 @@ px src/main.js dist/bundle.js -w
 1. Bump version `Cargo.toml`
 2. Build native app with release flag `cargo build --release`
 3. Create zip archive `zip -j authist-x86_64-apple-darwin.zip target/release/authist crx/net.endflow.authist.json`
-4. Update `DIST_URL` in `install.sh` with a new version
+4. Bump `VERSION` in `install.sh` with a new version
 5. Bump version `crx/manifest.json`
-6. Build JavaScript `cd crx && px src/main.js dist/bundle.js`
+6. Build JavaScript `cd crx && px src/main.js dist/bundle.js && cd ..`
 7. Pack extension with Chrome and rename it to `authist-x.x.x.crx`
 8. Commit changes, tag it `vx.x.x`, and push to github
 9. Upload `authist-x86_64-apple-darwin.zip` and `authist-x.x.x.crx` into a new release on github
