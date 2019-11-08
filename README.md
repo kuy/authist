@@ -33,7 +33,7 @@ The recognized code will be copied in clipboard.
 - Amazon Web Service
 - GitHub
 - Twitter
-- Instagram (coming soon)
+- Instagram
 - Amazon.co.jp
 - bitFlyer
 - Coincheck

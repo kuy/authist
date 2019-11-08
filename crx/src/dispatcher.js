@@ -33,6 +33,13 @@ const PLUGINS = [
     url: /^https:\/\/twitter\.com\/account\/login_verification/
   },
   {
+    name: "instagram",
+    url: [
+      /^https:\/\/www\.instagram\.com\//,
+      /^https:\/\/www\.instagram\.com\/accounts\/login/
+    ]
+  },
+  {
     name: "google",
     url: [
       /^https:\/\/accounts\.google\.com\/ServiceLogin/,

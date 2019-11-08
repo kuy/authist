@@ -6,7 +6,7 @@ if [[ ! -d $CHROME  ]]; then
   exit 1
 fi
 
-VERSION="0.2.0"
+VERSION="0.2.1"
 echo "Download $VERSION..."
 TEMP=$(mktemp -d)
 DIST_URL="https://github.com/kuy/authist/releases/download/v$VERSION/authist-x86_64-apple-darwin.zip"
